@@ -53,18 +53,23 @@ def contatos_do_grupo(codigo_grupo):
 
     db = MySQLdb.connect(host=CONFIG['db']['host'], user=CONFIG['db']['user'], passwd=CONFIG['db']['pass'], db=CONFIG['db']['name'])
 
-    group_table_name = CONFIG['db']['pref'] + '_toolsSimplephonebook_group'
+    group_table_name = CONFIG['db']['pref'] + '_toolsPhonebook_group'
 
     cur = db.cursor()
 
-    command = 'SELECT gpid FROM %s WHERE gp_code = %%s' % (group_table_name,)
+    command = 'SELECT id FROM %s WHERE code = %%s' % (group_table_name,)
 
     cur.execute(command, codigo_grupo.upper())
 
-    gpid = cur.fetchone()[0]
-    contact_table_name = CONFIG['db']['pref'] + '_toolsSimplephonebook'
+    try:
+        gpid = cur.fetchone()[0]
+    except TypeError:
+        logger.info('O grupo "%s" não foi encontrado' % (codigo_grupo))
+        exit(-1)
 
-    command = 'SELECT p_num, p_desc FROM %s WHERE gpid=%%s' % (contact_table_name,)
+    contact_table_name = CONFIG['db']['pref'] + '_toolsPhonebook'
+
+    command = 'SELECT mobile, name FROM %s WHERE gpid=%%s' % (contact_table_name,)
 
     cur.execute(command, gpid)
 
