@@ -34,7 +34,6 @@ próximo passo.
 3. Copiar o arquivo `config-dist.py` pra `config.py` e preencher seus campos de configuração.
 
 4. Na tela *Recursos > Administrar comandos*, criar um novo comando:
-
     - Configurar "Palavra-chave do comando SMS"  para ``MSG``
     - Configurar "Comando executado"  pra ``msg.py {SMSSENDER} {COMMANDPARAM}``
 "MSG" (ou outro, se preferir).
