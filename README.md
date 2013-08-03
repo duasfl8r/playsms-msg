@@ -36,7 +36,6 @@ próximo passo.
 4. Na tela *Recursos > Administrar comandos*, criar um novo comando:
     - Configurar "Palavra-chave do comando SMS"  para ``MSG``
     - Configurar "Comando executado"  pra ``msg.py {SMSSENDER} {COMMANDPARAM}``
-"MSG" (ou outro, se preferir).
     - Marcar "Make return as reply".
     - Copiar caminho presente em *Caminho de execução do comando SMS* para usar no próximo passo
 
