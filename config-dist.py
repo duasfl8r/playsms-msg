@@ -5,6 +5,8 @@ CONFIG = {
     'msg': {
         'debug': False,
         'logfile': '/var/log/playsms/sms.log',
+        'area_padrao': '21',
+        'pais_padrao': '+55',
     },
 
 
@@ -24,4 +26,4 @@ CONFIG = {
         'token': '',
         'url': 'http://example.com/playsms/',
     }
-}en
+}

@@ -8,6 +8,7 @@ Options:
     -d --debug      Mostra mensagens de debug
 """
 
+import re
 import sys
 from urllib import urlencode
 from urllib2 import urlopen
@@ -41,6 +42,33 @@ ch.setFormatter(short_formatter)
 
 logger.addHandler(ch)
 logger.addHandler(fh)
+
+def formato_internacional(numero):
+    re_pais = r'(?P<pais>\+[0-9]{2})'
+    re_zero = r'0'
+    re_area = r'(?P<area>[0-9]{2})'
+    re_numero = r'(?P<numero>[0-9]{8})'
+
+    re_pais_area_numero = r'^' + re_pais + re_area + re_numero + '$'
+    re_zero_area_numero = r'^' + re_zero + re_area + re_numero + '$'
+    re_area_numero = r'^' + re_area + re_numero + '$'
+    re_numero = r'^' + re_numero + '$'
+
+    if re.match(re_pais_area_numero, numero):
+        g = re.match(re_pais_area_numero, numero).groupdict()
+        return g['pais'] + g['area'] + g['numero']
+    if re.match(re_zero_area_numero, numero):
+        g = re.match(re_zero_area_numero, numero).groupdict()
+        return CONFIG['msg']['pais_padrao'] + g['area'] + g['numero']
+    if re.match(re_area_numero, numero):
+        g = re.match(re_area_numero, numero).groupdict()
+        return CONFIG['msg']['pais_padrao'] + g['area'] + g['numero']
+    if re.match(re_numero, numero):
+        g = re.match(re_numero, numero).groupdict()
+        return CONFIG['msg']['pais_padrao'] + CONFIG['msg']['area_padrao'] + g['numero']
+
+    raise ValueError('Formato de número desconhecido: {0}'.format(numero))
+
 
 def contatos_do_grupo(codigo_grupo):
     """
@@ -114,6 +142,7 @@ if __name__ == '__main__':
     args = docopt(__doc__)
 
     remetente = args['<remetente>']
+    remetente_intl = formato_internacional(remetente)
     codigo_grupo, mensagem = args['<grupo_e_mensagem>'].split(None, 1)
 
     if args['--debug']:
@@ -121,4 +150,4 @@ if __name__ == '__main__':
 
     logger.debug("SYS.ARGV: %s" % (str(sys.argv),))
     logger.debug("DOCOPT ARGS: %s" % (args,))
-    msg(remetente, codigo_grupo, mensagem)
+    msg(remetente_intl, codigo_grupo, mensagem)
